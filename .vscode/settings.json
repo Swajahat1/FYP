@@ -1,0 +1,23 @@
+{
+    "workbench.colorTheme": "Monokai",
+    "editor.minimap.enabled": false,
+    "files.autoSave": "afterDelay",
+    "diffEditor.maxComputationTime": 0,
+    "liveServer.settings.donotShowInfoMsg": true,
+    "terminal.integrated.defaultProfile.windows": "Command Prompt",
+    "[dart]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.rulers": [
+            80
+        ],
+        "editor.selectionHighlight": false,
+        "editor.tabCompletion": "onlySnippets",
+        "editor.wordBasedSuggestions": "off"
+    },
+    "avdmanager.sdkPath": "c:\\Flutter\\src\\flutter\\bin",
+    "avdmanager.sdkManager": "d:\\cmdline-tools\\bin\\avdmanager.bat",
+    "avdmanager.executable": "c:\\Users\\DELL\\.android\\sdk\\latest\\bin\\avdmanager.bat",
+    "java.jdt.ls.java.home": "C:\\Program Files\\Java\\jdk-21.0.5",
+    
+}
