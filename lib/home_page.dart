@@ -1965,10 +1965,11 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:myapp/login_page.dart';
+import 'package:myapp/therapist_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // Agora App ID (replace with your actual Agora App ID)
-const String appId = '51d04cab7dc84df589c15e084a154c0a';
+// const String appId = '51d04cab7dc84df589c15e084a154c0a';
 
 class HomeScreen extends StatefulWidget {
   final String userId;
@@ -3167,10 +3168,10 @@ class _OnlineAppointmentScreenState extends State<OnlineAppointmentScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => VideoCall(
-                title: 'Video Call with ${widget.therapist['name']}',
-                channelName: appointment['channelName'] ?? 'default_channel',
-                token: appointment['token'] ?? 'default_token',
+              builder: (context) => CreateTherapistPage(
+                // title: 'Video Call with ${widget.therapist['name']}',
+                // channelName: appointment['channelName'] ?? 'default_channel',
+                // token: appointment['token'] ?? 'default_token',
               ),
             ),
           );
@@ -3933,139 +3934,139 @@ class AnalysisScreen extends StatelessWidget {
     );
   }
 }
-
-class VideoCall extends StatefulWidget {
-  const VideoCall({
-    super.key,
-    required this.title,
-    required this.channelName,
-    required this.token,
-  });
-
-  final String title;
-  final String channelName;
-  final String token;
-
-  @override
-  State<VideoCall> createState() => _VideoCallState();
-}
-
-class _VideoCallState extends State<VideoCall> {
-  late RtcEngine _engine;
-  int? _remoteUid;
-  bool localUserJoined = false;
-
-  @override
-  void initState() {
-    initAgora();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _dispose();
-    super.dispose();
-  }
-
-  Future<void> initAgora() async {
-    await [Permission.microphone, Permission.camera].request();
-    _engine = createAgoraRtcEngine();
-    await _engine.initialize(const RtcEngineContext(
-      appId: appId,
-      channelProfile: ChannelProfileType.channelProfileCommunication,
-    ));
-    await _engine.enableVideo();
-    await _engine.startPreview();
-    await _engine.joinChannel(
-      token: widget.token,
-      channelId: widget.channelName,
-      options: const ChannelMediaOptions(
-        autoSubscribeVideo: true,
-        autoSubscribeAudio: true,
-        publishCameraTrack: true,
-        publishMicrophoneTrack: true,
-        clientRoleType: ClientRoleType.clientRoleBroadcaster,
-      ),
-      uid: 0,
-    );
-    _engine.registerEventHandler(
-      RtcEngineEventHandler(
-        onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-          debugPrint("local user ${connection.localUid} joined");
-          setState(() {
-            localUserJoined = true;
-          });
-        },
-        onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-          debugPrint("remote user $remoteUid joined");
-          setState(() {
-            _remoteUid = remoteUid;
-          });
-        },
-        onUserOffline: (RtcConnection connection, int remoteUid,
-            UserOfflineReasonType reason) {
-          debugPrint("remote user $remoteUid left channel");
-          setState(() {
-            _remoteUid = null;
-          });
-        },
-      ),
-    );
-  }
-
-  Future<void> _dispose() async {
-    await _engine.leaveChannel();
-    await _engine.release();
-  }
-
-  Widget _remoteVideo() {
-    if (_remoteUid != null) {
-      return AgoraVideoView(
-        controller: VideoViewController.remote(
-          rtcEngine: _engine,
-          canvas: VideoCanvas(uid: _remoteUid),
-          connection: RtcConnection(channelId: widget.channelName),
-        ),
-      );
-    } else {
-      return const Text(
-        'Please wait for remote user to join',
-        textAlign: TextAlign.center,
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Stack(
-        children: [
-          Center(
-            child: _remoteVideo(),
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: SizedBox(
-              width: 100,
-              height: 150,
-              child: Center(
-                child: localUserJoined
-                    ? AgoraVideoView(
-                        controller: VideoViewController(
-                          rtcEngine: _engine,
-                          canvas: const VideoCanvas(uid: 0),
-                        ),
-                      )
-                    : const CircularProgressIndicator(),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//
+// class VideoCall extends StatefulWidget {
+//   const VideoCall({
+//     super.key,
+//     required this.title,
+//     required this.channelName,
+//     required this.token,
+//   });
+//
+//   final String title;
+//   final String channelName;
+//   final String token;
+//
+//   @override
+//   State<VideoCall> createState() => _VideoCallState();
+// }
+//
+// class _VideoCallState extends State<VideoCall> {
+//   late RtcEngine _engine;
+//   int? _remoteUid;
+//   bool localUserJoined = false;
+//
+//   @override
+//   void initState() {
+//     initAgora();
+//     super.initState();
+//   }
+//
+//   @override
+//   void dispose() {
+//     _dispose();
+//     super.dispose();
+//   }
+//
+//   Future<void> initAgora() async {
+//     await [Permission.microphone, Permission.camera].request();
+//     _engine = createAgoraRtcEngine();
+//     await _engine.initialize(const RtcEngineContext(
+//       appId: appId,
+//       channelProfile: ChannelProfileType.channelProfileCommunication,
+//     ));
+//     await _engine.enableVideo();
+//     await _engine.startPreview();
+//     await _engine.joinChannel(
+//       token: widget.token,
+//       channelId: widget.channelName,
+//       options: const ChannelMediaOptions(
+//         autoSubscribeVideo: true,
+//         autoSubscribeAudio: true,
+//         publishCameraTrack: true,
+//         publishMicrophoneTrack: true,
+//         clientRoleType: ClientRoleType.clientRoleBroadcaster,
+//       ),
+//       uid: 0,
+//     );
+//     _engine.registerEventHandler(
+//       RtcEngineEventHandler(
+//         onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
+//           debugPrint("local user ${connection.localUid} joined");
+//           setState(() {
+//             localUserJoined = true;
+//           });
+//         },
+//         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
+//           debugPrint("remote user $remoteUid joined");
+//           setState(() {
+//             _remoteUid = remoteUid;
+//           });
+//         },
+//         onUserOffline: (RtcConnection connection, int remoteUid,
+//             UserOfflineReasonType reason) {
+//           debugPrint("remote user $remoteUid left channel");
+//           setState(() {
+//             _remoteUid = null;
+//           });
+//         },
+//       ),
+//     );
+//   }
+//
+//   Future<void> _dispose() async {
+//     await _engine.leaveChannel();
+//     await _engine.release();
+//   }
+//
+//   Widget _remoteVideo() {
+//     if (_remoteUid != null) {
+//       return AgoraVideoView(
+//         controller: VideoViewController.remote(
+//           rtcEngine: _engine,
+//           canvas: VideoCanvas(uid: _remoteUid),
+//           connection: RtcConnection(channelId: widget.channelName),
+//         ),
+//       );
+//     } else {
+//       return const Text(
+//         'Please wait for remote user to join',
+//         textAlign: TextAlign.center,
+//       );
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+//         title: Text(widget.title),
+//       ),
+//       body: Stack(
+//         children: [
+//           Center(
+//             child: _remoteVideo(),
+//           ),
+//           Align(
+//             alignment: Alignment.topLeft,
+//             child: SizedBox(
+//               width: 100,
+//               height: 150,
+//               child: Center(
+//                 child: localUserJoined
+//                     ? AgoraVideoView(
+//                         controller: VideoViewController(
+//                           rtcEngine: _engine,
+//                           canvas: const VideoCanvas(uid: 0),
+//                         ),
+//                       )
+//                     : const CircularProgressIndicator(),
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

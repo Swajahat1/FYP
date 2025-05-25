@@ -47,6 +47,7 @@ dependencies:
   image_picker: ^1.1.2
   permission_handler: ^12.0.0+1
   agora_rtc_engine: ^6.5.2
+  stripe_payment: ^1.1.4
   # zego_uikit_prebuilt_call: ^4.16.28
   # geolocator: ^14.0.0
 
